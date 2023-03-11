@@ -31,6 +31,7 @@
 #include "AUX_FUNCTIONS.h"
 #include "mcc_generated_files/adc1.h"
 #include "mcc_generated_files/uart1.h"
+#include "mcc_generated_files/oc1.h"
 #include "mcc_generated_files/pin_manager.h"
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -55,6 +56,11 @@
 
 #define ENGAGED		1
 #define DISENGAGED	0
+
+
+#define SERVO_CLOCKWISE         500     // (1ms   * 9999) / 20mS = 499.95
+#define SERVO_NEUTRAL           749     // (1.5ms * 9999) / 20mS = 749.925
+#define SERVO_COUNTERCLOCKWISE  1000    // (2ms   * 9999) / 20mS = 999.9
 
 
 ////////////////////////////////////////////////////////////////////////////////////
@@ -83,6 +89,12 @@ int main(void)
     
     SYSTEM_Initialize();
     
+    OC1_SecondaryValueSet(SERVO_CLOCKWISE);
+//    OC2_SecondaryValueSet(SERVO_CLOCKWISE);
+//    OC3_SecondaryValueSet(SERVO_NEUTRAL);
+//    OC4_SecondaryValueSet(SERVO_COUNTERCLOCKWISE);
+//    OC5_SecondaryValueSet(SERVO_COUNTERCLOCKWISE);
+    
     // Inputs initializing
     PB1_SetDigitalInput();
     PB2_SetDigitalInput();
@@ -90,6 +102,33 @@ int main(void)
     // Outputs initializing
     LED1_SetDigitalOutput();
     LED2_SetDigitalOutput();
+    
+    unsigned int counter = 500;
+    enum counterState {clock, clockwise} counterState;
+    
+    counterState = clock;
+    
+        
+    do{
+        if(counterState == clock)
+        {
+            if(counter < 1000)
+                counter += 10;
+            else
+               counterState = clockwise; 
+        }
+        else
+        {
+            if(counter > 500)
+                    counter -= 10;
+            else
+               counterState = clock; 
+
+        }
+        OC1_SecondaryValueSet(counter);
+        printf("\nPWM Value = %u", counter);
+        delay_ms(50);
+    }while(1);
     
     do{
         switch(OPER_STATUS){
