@@ -103,16 +103,20 @@
 #include "system.h"
 #include "interrupt_manager.h"
 #include "traps.h"
-#include "uart1.h"
+#include "oc1.h"
+#include "tmr2.h"
 #include "adc1.h"
+#include "uart1.h"
 
 void SYSTEM_Initialize(void)
 {
     PIN_MANAGER_Initialize();
     INTERRUPT_Initialize();
     CLOCK_Initialize();
-    ADC1_Initialize();
     UART1_Initialize();
+    ADC1_Initialize();
+    OC1_Initialize();
+    TMR2_Initialize();
 }
 
 /**
