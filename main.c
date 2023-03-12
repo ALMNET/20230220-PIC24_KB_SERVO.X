@@ -58,18 +58,18 @@
 #define DISENGAGED	0
 
 
-#define SERVO_CLOCKWISE         500     // (1ms   * 9999) / 20mS = 499.95
-#define SERVO_NEUTRAL           749     // (1.5ms * 9999) / 20mS = 749.925
-#define SERVO_COUNTERCLOCKWISE  1000    // (2ms   * 9999) / 20mS = 999.9
-
-
-#define SERVO_COUNTERCLOCKWISE  1000    // (2ms   * 9999) / 20mS = 999.9
-
+// Servo Definitions
 #define SERVO_0     250     // (0.5ms   * 9999) / 20mS = 999.9
 #define SERVO_45    500     // (1.0ms   * 9999) / 20mS = 999.9
 #define SERVO_90    750     // (1.5ms   * 9999) / 20mS = 999.9
 #define SERVO_135   1000    // (2.0ms   * 9999) / 20mS = 999.9
 #define SERVO_180   1250    // (2.5ms   * 9999) / 20mS = 999.9
+
+#define KB_servo_0      '0'
+#define KB_servo_45     '2'
+#define KB_servo_90     '4'
+#define KB_servo_135    '6'
+#define KB_servo_180    '8'
 
 
 ////////////////////////////////////////////////////////////////////////////////////
@@ -77,9 +77,6 @@
 ////////////////////////////////////////////////////////////////////////////////////
 
 unsigned char buffer[64];
-uint16_t potValue = 0;
-
-enum states{RESET, SENSOR_ALARM_MODE, SENSOR_ALARM_ACK_MODE} OPER_STATUS;
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////////// PROTOTYPE FUNCTIONS /////////////////////////////
@@ -96,11 +93,44 @@ unsigned int kb_test(unsigned short numberOfAttempts);
 int main(void)
 {
     // initialize the device
-    OPER_STATUS = RESET;
-        
     SYSTEM_Initialize();
     
+    
+    static char kb_pressed;
     kb_init();
+    
+    do{
+        
+        kb_pressed = get_new_button();
+            if(kb_pressed != '\0')
+                    printf("\nPWM Value = %c", kb_pressed);
+        
+        switch(kb_pressed){
+            case KB_servo_0:
+                OC1_SecondaryValueSet(SERVO_0);
+                break;
+                        
+            case KB_servo_45:
+                OC1_SecondaryValueSet(SERVO_45);
+                break;
+                        
+            case KB_servo_90:
+                OC1_SecondaryValueSet(SERVO_90);
+                break;
+                        
+            case KB_servo_135:
+                OC1_SecondaryValueSet(SERVO_135);
+                break;
+                        
+            case KB_servo_180:
+                OC1_SecondaryValueSet(SERVO_180);
+                break;
+                        
+            case '\0':
+                break;
+                          
+        }
+    }while(1);
 
 
 

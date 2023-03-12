@@ -4,10 +4,16 @@
 #include <stdint.h>
 #include <stdbool.h>
 #include <xc.h>
-#include <libpic30.h>
-#include "AUX_FUNCTIONS.h"
-//#include <p24FJ256GA702.h>
 
+// To configure KB port, modify these lines according to the desided port.
+// in this case the desired port is PORTB
+#define KB_IN_PORT  PORTB       // Assign PORTB input value
+#define KB_OUT_PORT LATB        // Assign LATB (Portb output latch)
+#define KB_DIR      TRISB       // Assign direction for input/output init set
+#define KB_PU       IOCPUB      // Set the pullup register according to selected
+                                // port
+
+// To configure kb port pins, modify next lines according to your needs
 #define ROW0 (1 << 8)
 #define ROW1 (1 << 9)
 #define ROW2 (1 << 10)
@@ -17,13 +23,10 @@
 #define COL1 (1 << 13)
 #define COL2 (1 << 14)
 
-#define KB_PORT PORTB
-#define KB_DIR  TRISB
+
 
 //An easy way to map the XY location is a lookup table.
-//You'll need to fill this in - you might need to figure out
-//if mirrored etc or something funky.
-// TODO: map the appropriate characters.
+//Definition of the array can be found in the KBD.c file
 extern char buttons[4][3];
 
 void kb_init(void);
