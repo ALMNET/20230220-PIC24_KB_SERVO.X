@@ -26,7 +26,7 @@
 // TODO: map the appropriate characters.
 extern char buttons[4][3];
 
-void init_hardware(void);
+void kb_init(void);
 
 /******************************************************************************
 This function writes to the appropriate pin, depending on the row called.

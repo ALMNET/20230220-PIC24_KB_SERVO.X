@@ -16,29 +16,28 @@ char buttons[4][3] =
  {'7', '8', '9'},
  {'*', '0', '#'}};
 
-void init_hardware(void)
+void kb_init(void)
 {
 	
 	// Configuring Rows as outputs
-//    TRISB &= (~ROW0 | ~ROW1 | ~ROW2 | ~ROW3);
+    TRISB &= (~ROW0 | ~ROW1 | ~ROW2 | ~ROW3);
     
-    TRISBbits.TRISB8  = 0;
-    TRISBbits.TRISB9  = 0; 
-    TRISBbits.TRISB10 = 0;
-    TRISBbits.TRISB11 = 0;
-    
-    TRISBbits.TRISB12 = 1;
-    TRISBbits.TRISB13 = 1;
-    TRISBbits.TRISB14 = 1;
-//    TRISBbits.TRISB15 = 1;
-    	
-    IOCPUBbits.IOCPB12 = 1;
-    IOCPUBbits.IOCPB13 = 1;
-    IOCPUBbits.IOCPB14 = 1;
+//    TRISBbits.TRISB8  = 0;
+//    TRISBbits.TRISB9  = 0; 
+//    TRISBbits.TRISB10 = 0;
+//    TRISBbits.TRISB11 = 0;
+//    
+//    TRISBbits.TRISB12 = 1;
+//    TRISBbits.TRISB13 = 1;
+//    TRISBbits.TRISB14 = 1;
+//    	
+//    IOCPUBbits.IOCPB12 = 1;
+//    IOCPUBbits.IOCPB13 = 1;
+//    IOCPUBbits.IOCPB14 = 1;
     
 	// Configuring Columns as inputs with Pullups
-//    TRISB  |= (COL0 | COL1 | COL2);
-//    IOCPUB |= (COL0 | COL1 | COL2); // Pullups (Interrup-On-Change Pull-Ups)
+    TRISB  |= (COL0 | COL1 | COL2);
+    IOCPUB |= (COL0 | COL1 | COL2); // Pullups (Interrup-On-Change Pull-Ups)
 	
 }
 
