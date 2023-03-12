@@ -54,9 +54,8 @@
 #include "tmr3.h"
 #include "interrupt_manager.h"
 #include "traps.h"
-#include "adc1.h"
-#include "oc1.h"
 #include "uart1.h"
+#include "oc1.h"
 
 #warning "This file will be removed in future MCC releases. Use system.h instead."
 

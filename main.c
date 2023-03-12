@@ -29,10 +29,10 @@
 #include "mcc_generated_files/system.h"
 
 #include "AUX_FUNCTIONS.h"
-#include "mcc_generated_files/adc1.h"
 #include "mcc_generated_files/uart1.h"
 #include "mcc_generated_files/oc1.h"
 #include "mcc_generated_files/pin_manager.h"
+#include "KBD.h"
 
 ////////////////////////////////////////////////////////////////////////////////
 ////////////////////////// I/O PINOUT AND DEFINITIONS //////////////////////////
@@ -86,8 +86,10 @@ int main(void)
 {
     // initialize the device
     OPER_STATUS = RESET;
-    
+        
     SYSTEM_Initialize();
+    
+    init_hardware();
     
     OC1_SecondaryValueSet(SERVO_CLOCKWISE);
 //    OC2_SecondaryValueSet(SERVO_CLOCKWISE);
@@ -108,98 +110,33 @@ int main(void)
     
     counterState = clock;
     
-        
+    char kb_pressed;
     do{
-        if(counterState == clock)
-        {
-            if(counter < 1000)
-                counter += 10;
-            else
-               counterState = clockwise; 
-        }
-        else
-        {
-            if(counter > 500)
-                    counter -= 10;
-            else
-               counterState = clock; 
-
-        }
-        OC1_SecondaryValueSet(counter);
-        printf("\nPWM Value = %u", counter);
-        delay_ms(50);
+//        if(counterState == clock)
+//        {
+//            if(counter < 1000)
+//                counter += 10;
+//            else
+//               counterState = clockwise; 
+//        }
+//        else
+//        {
+//            if(counter > 500)
+//                    counter -= 10;
+//            else
+//               counterState = clock; 
+//
+//        }
+//        OC1_SecondaryValueSet(counter);
+        
+        kb_pressed = get_new_button();
+        
+        if(kb_pressed != '\0')
+            printf("\nPWM Value = %c", kb_pressed);
+//        delay_ms(50);
     }while(1);
     
-    do{
-        switch(OPER_STATUS){
-            
-            ////////////////////////////////////////////////////////////////////
-            case RESET:
-
-                // First toggle
-                LED1_Toggle();
-                LED2_Toggle();
-                delay_ms(500);
-
-                // Second toggle
-                LED1_Toggle();
-                LED2_Toggle();
-                delay_ms(500);
-
-                // Third toggle (Last one)
-                LED1_Toggle();
-                LED2_Toggle();
-                delay_ms(500);
-
-                printf("\n\nOK");
-                delay_ms(2000); // 2 secs message
-
-                while(adc_value_get() < 50);    // Waits until pot > 50%
-
-                OPER_STATUS = SENSOR_ALARM_MODE;    // Change state to Sensor Alarm
-
-                break;
-
-
-            ////////////////////////////////////////////////////////////////////   
-            case SENSOR_ALARM_MODE:
-
-
-                printf("\nSENSOR ALARM");
-
-                do{
-                    potValue = adc_value_get();
-                    
-                    // LED1 Oscilation according pot value
-                    LED1_Toggle();
-                    delay_ms(10 * (100 - potValue));
-                }while(PB1_GetValue()); // Waits until PB1 is pressed
-
-                LED1_SetHigh();
-                OPER_STATUS = SENSOR_ALARM_ACK_MODE;
-
-                break;
-
-            ////////////////////////////////////////////////////////////////////
-            case SENSOR_ALARM_ACK_MODE:
-
-                printf("\nSENSOR ALARM ACK");
-
-                while(PB2_GetValue());
-                LED2_SetLow();
-
-                printf("\nSENSOR ALARM CLEARED");
-                delay_ms(2000);
-
-                LED1_SetLow();
-
-                OPER_STATUS = RESET;
-
-                break;
-
-            ////////////////////////////////////////////////////////////////////
-        }           
-    }while (1);
+    
         
     return 1;
 }
@@ -211,40 +148,8 @@ int main(void)
  * 
  * @retval		0 to 100 adc result value 
  */
-uint16_t adc_value_get(){
-
-    uint16_t result = 0;
-
-    ADC1_Initialize();
-
-    ADC1_Enable();
-    ADC1_ChannelSelect(Potentiometer);
-    
-    // Conversion Enable
-    ADC1_SoftwareTriggerEnable();   
-    
-    // Time Adquisition delay (TAD) for ADC Conversion
-    for(int i = 0; i < 1000; i++)
-    {
-    }
-    
-    // Stops ADC Trigger conversion
-    ADC1_SoftwareTriggerDisable();
-    
-    // Waits for ADC to complete process 
-    while(!ADC1_IsConversionComplete(Potentiometer));
-    
-    // Adjusting value to 0 - 100 result value -> 100 / 1023 = 0.0977517106
-    
-    // Result = ADC_Value * Maximum desired value / Maximum ADC Value)
-    // Where:
-    // 100 -> Maximum desired value, comes from 100%
-    // 1023 -> Maximum ADC Value
-    result = (uint16_t) (ADC1_ConversionResultGet(Potentiometer) * 0.0977517106);
-    
-    // ADC Module disabled for decrease power consumption 
-    ADC1_Disable(); 
-    
-    return result;
-    
-}
+//uint16_t adc_value_get(){
+//
+//  
+//    
+//}

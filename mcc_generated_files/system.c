@@ -64,7 +64,7 @@
 
 // FOSC
 #pragma config POSCMD = NONE    //Primary Oscillator Mode Select bits->Primary Oscillator disabled
-#pragma config OSCIOFCN = OFF    //OSC2 Pin Function bit->OSC2 is clock output
+#pragma config OSCIOFCN = ON    //OSC2 Pin Function bit->OSC2 is general purpose digital I/O pin
 #pragma config SOSCSEL = OFF    //SOSC Power Selection Configuration bits->Digital (SCLKI) mode
 #pragma config PLLSS = PLL_FRC    //PLL Secondary Selection Configuration bit->PLL is fed by the on-chip Fast RC (FRC) oscillator
 #pragma config IOL1WAY = ON    //Peripheral pin select configuration bit->Allow only one reconfiguration
@@ -104,19 +104,17 @@
 #include "tmr3.h"
 #include "interrupt_manager.h"
 #include "traps.h"
-#include "adc1.h"
-#include "oc1.h"
 #include "uart1.h"
+#include "oc1.h"
 
 void SYSTEM_Initialize(void)
 {
     PIN_MANAGER_Initialize();
-    INTERRUPT_Initialize();
     CLOCK_Initialize();
-    UART1_Initialize();
-    ADC1_Initialize();
+    INTERRUPT_Initialize();
     TMR3_Initialize();
     OC1_Initialize();
+    UART1_Initialize();
 }
 
 /**
