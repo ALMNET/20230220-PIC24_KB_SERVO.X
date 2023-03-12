@@ -45,26 +45,15 @@
 
 ///////////////////////////////// DEFINITIONS //////////////////////////////////
 
-#define INPUT		1
-#define OUTPUT		0
-
-#define ON			1
-#define OFF			0
-
-#define HIGH		1
-#define LOW			0
-
-#define ENGAGED		1
-#define DISENGAGED	0
-
-
-// Servo Definitions
+// Servo Definitions to use as parameter in "OC1_SecondaryValueSet" function
 #define SERVO_0     250     // (0.5ms   * 9999) / 20mS = 999.9
 #define SERVO_45    500     // (1.0ms   * 9999) / 20mS = 999.9
 #define SERVO_90    750     // (1.5ms   * 9999) / 20mS = 999.9
 #define SERVO_135   1000    // (2.0ms   * 9999) / 20mS = 999.9
 #define SERVO_180   1250    // (2.5ms   * 9999) / 20mS = 999.9
 
+// Keyboard, Modify these values to update desired keys according to desired
+// servo position
 #define KB_servo_0      '0'
 #define KB_servo_45     '2'
 #define KB_servo_90     '4'
@@ -72,9 +61,9 @@
 #define KB_servo_180    '8'
 
 
-////////////////////////////////////////////////////////////////////////////////////
-//////////////////////////////////// VARIABLES  ////////////////////////////////////
-////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////// VARIABLES  //////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
 
 unsigned char buffer[64];
 
@@ -94,10 +83,9 @@ int main(void)
 {
     // initialize the device
     SYSTEM_Initialize();
-    
+    kb_init();
     
     static char kb_pressed;
-    kb_init();
     
     do{
         
@@ -131,12 +119,6 @@ int main(void)
                           
         }
     }while(1);
-
-
-
-    kb_test(100);
-    
-    
         
     return 1;
 }
